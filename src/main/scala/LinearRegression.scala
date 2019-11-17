@@ -4,7 +4,7 @@ import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature._
 import org.apache.spark.sql.SparkSession
 
-object SVC {
+object LinearRegression {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder
