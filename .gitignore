@@ -3,3 +3,6 @@ model/
 out/
 output/
 spark/
+target/
+.idea/
+project/
