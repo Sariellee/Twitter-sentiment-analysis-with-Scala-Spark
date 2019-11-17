@@ -1,13 +1,11 @@
-import java.util.Locale
-
 import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.classification.LinearSVC
+import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature._
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
+import org.apache.spark.sql.SparkSession
 
-object SVC {
+object LogisticRegression {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder
@@ -60,9 +58,7 @@ object SVC {
       .setInputCol("text")
       .setOutputCol("words")
 
-
-    Locale.setDefault(new Locale("en", "US"))
-    // remove useless words ("the", "by", "a", "an"...-)
+    // remove useless words ("the", "by", "a", "an"...)
     val remover = new StopWordsRemover()
       .setLocale("en_US")
       .setCaseSensitive(true)
@@ -88,7 +84,7 @@ object SVC {
       .setHandleInvalid("skip")
 
     // chosen model is Support Vector Classifier
-    val model = new LinearSVC().setMaxIter(100)
+    val model = new LogisticRegression().setMaxIter(100)
 
     // initialize the pipeline
     val pipeline = new Pipeline().setStages(Array(tokenizer, remover, cv, idf, labelIndexer, model))
@@ -132,7 +128,7 @@ object SVC {
     predictions.show(100)
 
     // evaluate the accuracy
-    //val evaluator = new BinaryClassificationEvaluator().setRawPredictionCol("rawPrediction")
+    // val evaluator = new BinaryClassificationEvaluator().setRawPredictionCol("rawPrediction")
     // val accuracy = evaluator.evaluate(predictions)
     // println(s"Accuracy = $accuracy")
 
