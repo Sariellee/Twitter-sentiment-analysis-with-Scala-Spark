@@ -1,3 +1,5 @@
+import java.util.Locale
+
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.LinearSVC
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
@@ -57,7 +59,9 @@ object SVC {
       .setInputCol("text")
       .setOutputCol("words")
 
-    // remove useless words ("the", "by", "a", "an"...)
+
+    Locale.setDefault(new Locale("en", "US"))
+    // remove useless words ("the", "by", "a", "an"...-)
     val remover = new StopWordsRemover()
       .setCaseSensitive(true)
       .setInputCol("words")
