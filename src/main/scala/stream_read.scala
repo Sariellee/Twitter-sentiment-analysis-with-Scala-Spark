@@ -1,3 +1,4 @@
+import java.io.File
 import java.util.Locale
 
 import org.apache.spark.ml.PipelineModel
@@ -13,8 +14,8 @@ object stream_read {
     val spark = new sql.SparkSession.Builder().master("local[*]").appName("Twitter-Sentiment").getOrCreate()
     import spark.implicits._
     spark.sparkContext.setLogLevel("ERROR")
-    val ssc = new StreamingContext(spark.sparkContext, Seconds(4))
-
+    val ssc = new StreamingContext(spark.sparkContext, Seconds(10))
+    ssc.checkpoint(new File("/Users/semenkiselev/IdeaProjects/Twitter-sentiment-analysis-with-Scala-Spark/model", "streaming_checkpoint").toString)
 
     Locale.getDefault()
     Locale.setDefault(new Locale("en", "US"))
@@ -27,43 +28,19 @@ object stream_read {
       (rdd, time) =>
         if (!rdd.isEmpty()) {
           val df = rdd.toDF("text")
-          // do something
-          model
-            .transform(df)
-            .withColumn("timestamp", current_timestamp())
-            .select("timestamp", "text", "prediction")
-            .write
-//            .mode(SaveMode.Append)
-            .csv(outputPath)
           if (df.count() > 0) {
             model
               .transform(df)
               .withColumn("timestamp", current_timestamp())
               .select("timestamp", "text", "prediction")
               .write
-//              .mode(SaveMode.Append)
+              .mode(SaveMode.Append)
               .csv(outputPath)
           }
           model.transform(df).collect().foreach(println)
         }
     )
-
+    ssc.start()
+    ssc.awaitTermination()
   }
 }
-
-//val lines = ssc.socketTextStream("localhost", 8989)
-//lines.foreachRDD {
-//  rdd =>
-//    val df = rdd.toDF().withColumnRenamed("value", "SentimentText")
-//    if (df.count() > 0) {
-//      pipelineFit
-//        .transform(df)
-//        .withColumn("timestamp", current_timestamp())
-//        .select("timestamp", "SentimentText", "prediction")
-//        .repartition(1)
-//        .coalesce(1)
-//        .write
-//        .mode(SaveMode.Append)
-//        .csv(outputPath)
-//    }
-//}
