@@ -3,15 +3,14 @@ import java.util.Locale
 
 import org.apache.spark.ml.PipelineModel
 import org.apache.spark.sql
-import org.apache.spark.sql.{SaveMode, SparkSession}
-import org.apache.spark.sql.streaming._
+import org.apache.spark.sql.SaveMode
 import org.apache.spark.sql.functions._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-object stream_read {
+object STREAM_LISTENER {
   def main(args: Array[String]): Unit = {
 
-    val spark = new sql.SparkSession.Builder().master("local[1]").appName("Twitter-Sentiment").getOrCreate()
+    val spark = new sql.SparkSession.Builder().master("local[*]").appName("Twitter-Sentiment").getOrCreate()
     import spark.implicits._
     val ssc = new StreamingContext(spark.sparkContext, Seconds(10))
     ssc.checkpoint(new File("/Users/semenkiselev/IdeaProjects/Twitter-sentiment-analysis-with-Scala-Spark/model", "streaming_checkpoint").toString)
@@ -45,3 +44,4 @@ object stream_read {
     ssc.awaitTermination()
   }
 }
+
