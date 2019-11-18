@@ -21,7 +21,7 @@ object STREAM_LISTENER {
     val outputPath = "/Users/semenkiselev/IdeaProjects/Twitter-sentiment-analysis-with-Scala-Spark/output_model"
 
 
-    val readStream = ssc.socketTextStream("localhost", 9999)
+    val readStream = ssc.socketTextStream("10.90.138.32", 8989)
     readStream.foreachRDD(
       (rdd, time) =>
         if (!rdd.isEmpty()) {
