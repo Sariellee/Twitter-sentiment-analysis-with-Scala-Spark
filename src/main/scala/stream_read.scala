@@ -22,7 +22,7 @@ object stream_read {
     val outputPath = "output_model"
 
 
-    val readStream = ssc.socketTextStream("localhost", 8989)
+    val readStream = ssc.socketTextStream("", 8989)
     readStream.foreachRDD(
       rdd =>
         if (!rdd.isEmpty()) {
