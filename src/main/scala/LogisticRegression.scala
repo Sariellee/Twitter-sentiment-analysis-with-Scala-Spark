@@ -1,3 +1,5 @@
+import java.util.Locale
+
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
@@ -14,6 +16,8 @@ object LogisticRegression {
       .getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
 
+    Locale.getDefault()
+    Locale.setDefault(new Locale("en", "US"))
     // Dataset consists of 3 files:
 
     // imdb_labelled.txt
@@ -133,7 +137,7 @@ object LogisticRegression {
     // println(s"Accuracy = $accuracy")
 
     // save the model
-    pipelineFit.write.overwrite().save("model")
+    pipelineFit.write.overwrite().save("modelLogReg")
 
     spark.stop()
   }

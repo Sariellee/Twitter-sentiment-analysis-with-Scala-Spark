@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import os
 
 # Pie chart, where the slices will be ordered and plotted counter-clockwise:
-dir = "../../../mostPopularWords.txt"
+dir = "mostPopularWords_LogReg"
 files = os.listdir(dir)
 file = [files[i] for i in range(len(files)) if files[i][-4:-1]+files[i][-1]=='0000'][0]
 
