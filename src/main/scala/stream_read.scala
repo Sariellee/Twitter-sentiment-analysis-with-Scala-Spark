@@ -13,21 +13,20 @@ object stream_read {
 
     val spark = new sql.SparkSession.Builder().master("local[1]").appName("Twitter-Sentiment").getOrCreate()
     import spark.implicits._
-    val ssc = new StreamingContext(spark.sparkContext, Seconds(10))
-    ssc.checkpoint(new File("/Users/semenkiselev/IdeaProjects/Twitter-sentiment-analysis-with-Scala-Spark/model", "streaming_checkpoint").toString)
+    val ssc = new StreamingContext(spark.sparkContext, Seconds(2))
+    ssc.checkpoint(new File("model", "streaming_checkpoint").toString)
 
     Locale.getDefault()
     Locale.setDefault(new Locale("en", "US"))
-    val model = PipelineModel.load("/Users/semenkiselev/IdeaProjects/Twitter-sentiment-analysis-with-Scala-Spark/model")
-    val outputPath = "/Users/semenkiselev/IdeaProjects/Twitter-sentiment-analysis-with-Scala-Spark/output_model"
+    val model = PipelineModel.load("model")
+    val outputPath = "output_model"
 
 
-    val readStream = ssc.socketTextStream("localhost", 9999)
+    val readStream = ssc.socketTextStream("localhost", 8989)
     readStream.foreachRDD(
-      (rdd, time) =>
+      rdd =>
         if (!rdd.isEmpty()) {
           rdd.foreach(println)
-          print(rdd)
           val df = rdd.toDF("text")
           if (df.count() > 0) {
             model
